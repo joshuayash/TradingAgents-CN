@@ -1,8 +1,11 @@
-[phases.build]
-cmds = ["pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple"]
-
 [phases.setup]
 nixPkgs = ["python310", "gcc"]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple"]
+
+[phases.build]
+cmds = []
 
 [start]
 cmd = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
