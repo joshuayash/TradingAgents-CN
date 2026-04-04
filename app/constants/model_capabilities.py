@@ -280,6 +280,56 @@ DEFAULT_MODEL_CAPABILITIES: Dict[str, Dict[str, Any]] = {
         "description": "Claude 3.5 Sonnet，最新旗舰"
     },
 
+    # ==================== Moonshot AI (Kimi) ====================
+    "moonshot-v1-8k": {
+        "capability_level": 3,
+        "suitable_roles": [ModelRole.BOTH],
+        "features": [ModelFeature.TOOL_CALLING, ModelFeature.FAST_RESPONSE],
+        "recommended_depths": ["快速", "基础", "标准"],
+        "performance_metrics": {"speed": 4, "cost": 4, "quality": 4},
+        "description": "Moonshot v1 8K，标准版本"
+    },
+    "moonshot-v1-32k": {
+        "capability_level": 3,
+        "suitable_roles": [ModelRole.BOTH],
+        "features": [ModelFeature.TOOL_CALLING, ModelFeature.LONG_CONTEXT],
+        "recommended_depths": ["基础", "标准", "深度"],
+        "performance_metrics": {"speed": 4, "cost": 3, "quality": 4},
+        "description": "Moonshot v1 32K，长上下文版本"
+    },
+    "moonshot-v1-128k": {
+        "capability_level": 4,
+        "suitable_roles": [ModelRole.BOTH],
+        "features": [ModelFeature.TOOL_CALLING, ModelFeature.LONG_CONTEXT, ModelFeature.REASONING],
+        "recommended_depths": ["标准", "深度", "全面"],
+        "performance_metrics": {"speed": 3, "cost": 2, "quality": 5},
+        "description": "Moonshot v1 128K，超长上下文版本"
+    },
+    "kimi-k1.5": {
+        "capability_level": 4,
+        "suitable_roles": [ModelRole.DEEP_ANALYSIS],
+        "features": [ModelFeature.TOOL_CALLING, ModelFeature.LONG_CONTEXT, ModelFeature.REASONING],
+        "recommended_depths": ["深度", "全面"],
+        "performance_metrics": {"speed": 3, "cost": 2, "quality": 5},
+        "description": "Kimi K1.5，长文本专家模型"
+    },
+    "kimi-k2.5": {
+        "capability_level": 5,
+        "suitable_roles": [ModelRole.BOTH],
+        "features": [ModelFeature.TOOL_CALLING, ModelFeature.LONG_CONTEXT, ModelFeature.REASONING],
+        "recommended_depths": ["标准", "深度", "全面"],
+        "performance_metrics": {"speed": 4, "cost": 3, "quality": 5},
+        "description": "Kimi K2.5，最新旗舰模型"
+    },
+    "kimi-code": {
+        "capability_level": 4,
+        "suitable_roles": [ModelRole.BOTH],
+        "features": [ModelFeature.TOOL_CALLING, ModelFeature.LONG_CONTEXT, ModelFeature.REASONING],
+        "recommended_depths": ["标准", "深度", "全面"],
+        "performance_metrics": {"speed": 4, "cost": 3, "quality": 5},
+        "description": "Kimi Code，代码和推理专家模型"
+    },
+
     # ==================== Google Gemini ====================
     "gemini-pro": {
         "capability_level": 3,
