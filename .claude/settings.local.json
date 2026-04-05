@@ -24,7 +24,9 @@
       "Bash(railway --help)",
       "Bash(curl -s \"https://railway.com/project/7cbb25db-cbe8-455f-83b4-d02e83ef7875/service/a6a51898-e524-49b6-9d41-02ac75152800?id=5d128659-70aa-4d7c-a10d-ae2b7a8d5d58\")",
       "Bash(ls -la /Users/joshua/code/TradingAgents-CN/.railway*)",
-      "Bash(ls -la /Users/joshua/code/TradingAgents-CN/railway*)"
+      "Bash(ls -la /Users/joshua/code/TradingAgents-CN/railway*)",
+      "Bash(railway ssh:*)",
+      "Bash(railway open:*)"
     ]
   }
 }
