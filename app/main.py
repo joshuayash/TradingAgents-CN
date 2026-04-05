@@ -229,6 +229,12 @@ async def lifespan(app: FastAPI):
 
     await init_db()
 
+    # 创建默认用户（如果不存在）
+    try:
+        await create_default_users()
+    except Exception as e:
+        logger.warning(f"⚠️  创建默认用户失败: {e}")
+
     #  配置桥接：将统一配置写入环境变量，供 TradingAgents 核心库使用
     try:
         from app.core.config_bridge import bridge_config_to_env
@@ -617,13 +623,21 @@ if not settings.DEBUG:
         allowed_hosts=settings.ALLOWED_HOSTS
     )
 
-# CORS中间件
+# CORS中间件 - 允许所有来源访问API
+# 明确配置允许的来源（包括前端域名和通配符）
+allow_origins = settings.ALLOWED_ORIGINS
+if "*" not in allow_origins:
+    # 确保通配符在列表中，允许所有跨域请求
+    allow_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=allow_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=86400,
 )
 
 
