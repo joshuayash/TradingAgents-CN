@@ -127,12 +127,14 @@ def create_llm_by_provider(provider: str, model: str, backend_url: str, temperat
         if not moonshot_api_key:
             raise ValueError("使用 Moonshot (Kimi) 需要设置 MOONSHOT_API_KEY 环境变量或在数据库中配置 API Key")
 
+        # 🔧 Moonshot/Kimi 只接受 temperature=1
+        logger.info(f"🔧 [Moonshot] 强制设置 temperature=1.0 (原值: {temperature})")
         return create_openai_compatible_llm(
             provider="moonshot",
             model=model,
             api_key=moonshot_api_key,
             base_url=backend_url,
-            temperature=temperature,
+            temperature=1.0,
             max_tokens=max_tokens,
             timeout=timeout
         )
@@ -285,6 +287,19 @@ class TradingAgentsGraph:
             logger.info(f"✅ [混合模式] LLM 实例创建成功")
 
         elif self.config["llm_provider"].lower() == "openai":
+            # 🔧 检查是否使用 Kimi/Moonshot 模型（通过 OpenAI 兼容方式）
+            quick_model_lower = self.config["quick_think_llm"].lower()
+            deep_model_lower = self.config["deep_think_llm"].lower()
+            is_kimi_quick = "kimi" in quick_model_lower or "moonshot" in quick_model_lower
+            is_kimi_deep = "kimi" in deep_model_lower or "moonshot" in deep_model_lower
+            
+            if is_kimi_quick:
+                quick_temperature = 1.0
+                logger.info(f"🔧 [OpenAI-快速模型] 检测到Kimi模型，强制temperature=1.0")
+            if is_kimi_deep:
+                deep_temperature = 1.0
+                logger.info(f"🔧 [OpenAI-深度模型] 检测到Kimi模型，强制temperature=1.0")
+            
             logger.info(f"🔧 [OpenAI-快速模型] max_tokens={quick_max_tokens}, temperature={quick_temperature}, timeout={quick_timeout}s")
             logger.info(f"🔧 [OpenAI-深度模型] max_tokens={deep_max_tokens}, temperature={deep_temperature}, timeout={deep_timeout}s")
 
@@ -307,6 +322,19 @@ class TradingAgentsGraph:
             siliconflow_api_key = os.getenv('SILICONFLOW_API_KEY')
             if not siliconflow_api_key:
                 raise ValueError("使用SiliconFlow需要设置SILICONFLOW_API_KEY环境变量")
+
+            # 🔧 检查是否使用 Kimi/Moonshot 模型
+            quick_model_lower = self.config["quick_think_llm"].lower()
+            deep_model_lower = self.config["deep_think_llm"].lower()
+            is_kimi_quick = "kimi" in quick_model_lower or "moonshot" in quick_model_lower
+            is_kimi_deep = "kimi" in deep_model_lower or "moonshot" in deep_model_lower
+            
+            if is_kimi_quick:
+                quick_temperature = 1.0
+                logger.info(f"🔧 [SiliconFlow-快速模型] 检测到Kimi模型，强制temperature=1.0")
+            if is_kimi_deep:
+                deep_temperature = 1.0
+                logger.info(f"🔧 [SiliconFlow-深度模型] 检测到Kimi模型，强制temperature=1.0")
 
             logger.info(f"🌐 [SiliconFlow] 使用API密钥: {siliconflow_api_key[:20]}...")
             logger.info(f"🔧 [SiliconFlow-快速模型] max_tokens={quick_max_tokens}, temperature={quick_temperature}, timeout={quick_timeout}s")
@@ -334,6 +362,19 @@ class TradingAgentsGraph:
             if not openrouter_api_key:
                 raise ValueError("使用OpenRouter需要设置OPENROUTER_API_KEY或OPENAI_API_KEY环境变量")
 
+            # 🔧 检查是否使用 Kimi/Moonshot 模型
+            quick_model_lower = self.config["quick_think_llm"].lower()
+            deep_model_lower = self.config["deep_think_llm"].lower()
+            is_kimi_quick = "kimi" in quick_model_lower or "moonshot" in quick_model_lower
+            is_kimi_deep = "kimi" in deep_model_lower or "moonshot" in deep_model_lower
+            
+            if is_kimi_quick:
+                quick_temperature = 1.0
+                logger.info(f"🔧 [OpenRouter-快速模型] 检测到Kimi模型，强制temperature=1.0")
+            if is_kimi_deep:
+                deep_temperature = 1.0
+                logger.info(f"🔧 [OpenRouter-深度模型] 检测到Kimi模型，强制temperature=1.0")
+
             logger.info(f"🌐 [OpenRouter] 使用API密钥: {openrouter_api_key[:20]}...")
             logger.info(f"🔧 [OpenRouter-快速模型] max_tokens={quick_max_tokens}, temperature={quick_temperature}, timeout={quick_timeout}s")
             logger.info(f"🔧 [OpenRouter-深度模型] max_tokens={deep_max_tokens}, temperature={deep_temperature}, timeout={deep_timeout}s")
@@ -355,6 +396,19 @@ class TradingAgentsGraph:
                 timeout=quick_timeout
             )
         elif self.config["llm_provider"] == "ollama":
+            # 🔧 检查是否使用 Kimi/Moonshot 模型
+            quick_model_lower = self.config["quick_think_llm"].lower()
+            deep_model_lower = self.config["deep_think_llm"].lower()
+            is_kimi_quick = "kimi" in quick_model_lower or "moonshot" in quick_model_lower
+            is_kimi_deep = "kimi" in deep_model_lower or "moonshot" in deep_model_lower
+            
+            if is_kimi_quick:
+                quick_temperature = 1.0
+                logger.info(f"🔧 [Ollama-快速模型] 检测到Kimi模型，强制temperature=1.0")
+            if is_kimi_deep:
+                deep_temperature = 1.0
+                logger.info(f"🔧 [Ollama-深度模型] 检测到Kimi模型，强制temperature=1.0")
+            
             logger.info(f"🔧 [Ollama-快速模型] max_tokens={quick_max_tokens}, temperature={quick_temperature}, timeout={quick_timeout}s")
             logger.info(f"🔧 [Ollama-深度模型] max_tokens={deep_max_tokens}, temperature={deep_temperature}, timeout={deep_timeout}s")
 
@@ -373,6 +427,19 @@ class TradingAgentsGraph:
                 timeout=quick_timeout
             )
         elif self.config["llm_provider"].lower() == "anthropic":
+            # 🔧 检查是否使用 Kimi/Moonshot 模型
+            quick_model_lower = self.config["quick_think_llm"].lower()
+            deep_model_lower = self.config["deep_think_llm"].lower()
+            is_kimi_quick = "kimi" in quick_model_lower or "moonshot" in quick_model_lower
+            is_kimi_deep = "kimi" in deep_model_lower or "moonshot" in deep_model_lower
+            
+            if is_kimi_quick:
+                quick_temperature = 1.0
+                logger.info(f"🔧 [Anthropic-快速模型] 检测到Kimi模型，强制temperature=1.0")
+            if is_kimi_deep:
+                deep_temperature = 1.0
+                logger.info(f"🔧 [Anthropic-深度模型] 检测到Kimi模型，强制temperature=1.0")
+            
             logger.info(f"🔧 [Anthropic-快速模型] max_tokens={quick_max_tokens}, temperature={quick_temperature}, timeout={quick_timeout}s")
             logger.info(f"🔧 [Anthropic-深度模型] max_tokens={deep_max_tokens}, temperature={deep_temperature}, timeout={deep_timeout}s")
 
@@ -709,15 +776,17 @@ class TradingAgentsGraph:
             deep_config = self.config.get("deep_model_config", {})
 
             quick_max_tokens = quick_config.get("max_tokens", 4000)
-            quick_temperature = quick_config.get("temperature", 0.7)
+            # 🔧 Moonshot/Kimi 只接受 temperature=1
+            quick_temperature = 1.0
             quick_timeout = quick_config.get("timeout", 180)
 
             deep_max_tokens = deep_config.get("max_tokens", 4000)
-            deep_temperature = deep_config.get("temperature", 0.7)
+            # 🔧 Moonshot/Kimi 只接受 temperature=1
+            deep_temperature = 1.0
             deep_timeout = deep_config.get("timeout", 180)
 
-            logger.info(f"🔧 [Moonshot-快速模型] max_tokens={quick_max_tokens}, temperature={quick_temperature}, timeout={quick_timeout}s")
-            logger.info(f"🔧 [Moonshot-深度模型] max_tokens={deep_max_tokens}, temperature={deep_temperature}, timeout={deep_timeout}s")
+            logger.info(f"🔧 [Moonshot-快速模型] max_tokens={quick_max_tokens}, temperature={quick_temperature} (强制), timeout={quick_timeout}s")
+            logger.info(f"🔧 [Moonshot-深度模型] max_tokens={deep_max_tokens}, temperature={deep_temperature} (强制), timeout={deep_timeout}s")
 
             # 获取 backend_url（如果配置中有的话）
             backend_url = self.config.get("backend_url")
@@ -794,6 +863,19 @@ class TradingAgentsGraph:
             deep_max_tokens = deep_config.get("max_tokens", 4000)
             deep_temperature = deep_config.get("temperature", 0.7)
             deep_timeout = deep_config.get("timeout", 180)
+
+            # 🔧 检查是否使用 Kimi/Moonshot 模型
+            quick_model_lower = self.config["quick_think_llm"].lower()
+            deep_model_lower = self.config["deep_think_llm"].lower()
+            is_kimi_quick = "kimi" in quick_model_lower or "moonshot" in quick_model_lower
+            is_kimi_deep = "kimi" in deep_model_lower or "moonshot" in deep_model_lower
+            
+            if is_kimi_quick:
+                quick_temperature = 1.0
+                logger.info(f"🔧 [{provider_name}-快速模型] 检测到Kimi模型，强制temperature=1.0")
+            if is_kimi_deep:
+                deep_temperature = 1.0
+                logger.info(f"🔧 [{provider_name}-深度模型] 检测到Kimi模型，强制temperature=1.0")
 
             logger.info(f"🔧 [{provider_name}-快速模型] max_tokens={quick_max_tokens}, temperature={quick_temperature}, timeout={quick_timeout}s")
             logger.info(f"🔧 [{provider_name}-深度模型] max_tokens={deep_max_tokens}, temperature={deep_temperature}, timeout={deep_timeout}s")
