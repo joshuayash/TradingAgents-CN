@@ -83,13 +83,31 @@ const handle401Error = (authStore: any, message: string = '登录已过期，请
 // 创建axios实例
 const createAxiosInstance = (): AxiosInstance => {
   // 生产环境使用绝对 URL，开发环境使用相对 URL 或配置值
-  const isProduction = import.meta.env.PROD
-  const defaultApiUrl = isProduction
-    ? 'https://backend-service-production-14ef.up.railway.app'
-    : ''
+  // 注意：import.meta.env 的值在构建时被替换
+  const viteApiUrl = import.meta.env.VITE_API_BASE_URL as string | undefined
+  const isProduction = import.meta.env.PROD === true || import.meta.env.PROD === 'true'
+
+  // 确定最终使用的 baseURL
+  let baseUrl: string
+  if (viteApiUrl && viteApiUrl.trim() !== '') {
+    // 优先使用环境变量配置
+    baseUrl = viteApiUrl.trim()
+  } else if (isProduction) {
+    // 生产环境使用绝对 URL
+    baseUrl = 'https://backend-service-production-14ef.up.railway.app'
+  } else {
+    // 开发环境使用相对路径
+    baseUrl = ''
+  }
+
+  console.log('[API Config]', {
+    viteApiUrl,
+    isProduction,
+    finalBaseUrl: baseUrl || '(empty - relative)'
+  })
 
   const instance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || defaultApiUrl,
+    baseURL: baseUrl,
     timeout: 60000, // 增加超时时间到60秒（数据同步等长时间操作）
     headers: {
       'Content-Type': 'application/json',
