@@ -977,10 +977,13 @@ class ConfigService:
                 # 🔧 根据模型类型调整 temperature 参数
                 # Kimi/Moonshot AI 的模型只接受 temperature=1
                 provider_lower = provider_str.lower()
+                logger.info(f"🔍 [温度调试] provider_str={provider_str}, provider_lower={provider_lower}")
                 if provider_lower in ["moonshot", "kimi"]:
                     test_temperature = 1.0
+                    logger.info(f"🔍 [温度调试] 检测到 Moonshot/Kimi，设置 temperature=1.0")
                 else:
                     test_temperature = 0.1
+                    logger.info(f"🔍 [温度调试] 非 Moonshot/Kimi，设置 temperature=0.1")
                 
                 data = {
                     "model": llm_config.model_name,
