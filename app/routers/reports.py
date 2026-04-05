@@ -182,19 +182,29 @@ async def get_reports_list(
             # 🔥 获取市场类型，如果没有则根据股票代码推断
             market_type = doc.get("market_type")
             if not market_type:
-                from tradingagents.utils.stock_utils import StockUtils
-                market_info = StockUtils.get_market_info(stock_code)
-                market_type_map = {
-                    "china_a": "A股",
-                    "hong_kong": "港股",
-                    "us": "美股",
-                    "unknown": "A股"
-                }
-                market_type = market_type_map.get(market_info.get("market", "unknown"), "A股")
+                try:
+                    from tradingagents.utils.stock_utils import StockUtils
+                    market_info = StockUtils.get_market_info(stock_code)
+                    market_type_map = {
+                        "china_a": "A股",
+                        "hong_kong": "港股",
+                        "us": "美股",
+                        "unknown": "A股"
+                    }
+                    market_type = market_type_map.get(market_info.get("market", "unknown"), "A股")
+                except Exception as e:
+                    logger.warning(f"⚠️ 获取市场类型失败 {stock_code}: {e}")
+                    # 简单推断：6位数字代码默认为A股
+                    market_type = "A股"
 
             # 获取创建时间（数据库中是 UTC 时间，需要转换为 UTC+8）
-            created_at = doc.get("created_at", datetime.utcnow())
-            created_at_tz = to_config_tz(created_at)  # 转换为 UTC+8 并添加时区信息
+            try:
+                created_at = doc.get("created_at", datetime.utcnow())
+                created_at_tz = to_config_tz(created_at)  # 转换为 UTC+8 并添加时区信息
+            except Exception as e:
+                logger.warning(f"⚠️ 时区转换失败: {e}")
+                created_at = doc.get("created_at", datetime.utcnow())
+                created_at_tz = created_at
 
             report = {
                 "id": str(doc["_id"]),
@@ -265,8 +275,13 @@ async def get_report_detail(
             updated_at = tasks_doc.get("completed_at") or created_at
 
             # 转换时区：数据库中是 UTC 时间，转换为 UTC+8
-            created_at_tz = to_config_tz(created_at)
-            updated_at_tz = to_config_tz(updated_at)
+            try:
+                created_at_tz = to_config_tz(created_at)
+                updated_at_tz = to_config_tz(updated_at)
+            except Exception as e:
+                logger.warning(f"⚠️ 时区转换失败: {e}")
+                created_at_tz = created_at
+                updated_at_tz = updated_at
 
             def to_iso(x):
                 if hasattr(x, "isoformat"):
@@ -309,12 +324,19 @@ async def get_report_detail(
                 stock_name = get_stock_name(stock_symbol)
 
             # 获取时间（数据库中是 UTC 时间，需要转换为 UTC+8）
-            created_at = doc.get("created_at", datetime.utcnow())
-            updated_at = doc.get("updated_at", datetime.utcnow())
+            try:
+                created_at = doc.get("created_at", datetime.utcnow())
+                updated_at = doc.get("updated_at", datetime.utcnow())
 
-            # 转换时区：数据库中是 UTC 时间，转换为 UTC+8
-            created_at_tz = to_config_tz(created_at)
-            updated_at_tz = to_config_tz(updated_at)
+                # 转换时区：数据库中是 UTC 时间，转换为 UTC+8
+                created_at_tz = to_config_tz(created_at)
+                updated_at_tz = to_config_tz(updated_at)
+            except Exception as e:
+                logger.warning(f"⚠️ 时区转换失败: {e}")
+                created_at = doc.get("created_at", datetime.utcnow())
+                updated_at = doc.get("updated_at", datetime.utcnow())
+                created_at_tz = created_at
+                updated_at_tz = updated_at
 
             report = {
                 "id": str(doc["_id"]),
