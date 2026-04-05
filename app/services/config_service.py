@@ -948,6 +948,7 @@ class ConfigService:
                 logger.info(f"🔍 使用 DashScope 专用测试方法")
                 result = self._test_dashscope_api(api_key, f"{provider_str} {llm_config.model_name}", llm_config.model_name)
                 result["response_time"] = time.time() - start_time
+                logger.info(f"📊 DashScope 测试结果: success={result.get('success')}, message={result.get('message')}")
                 return result
             else:
                 # 其他厂家使用 OpenAI 兼容的测试方法
@@ -3589,9 +3590,11 @@ class ConfigService:
             }
 
             response = requests.post(url, json=data, headers=headers, timeout=10)
+            logger.info(f"📡 [DashScope 测试] 响应状态码: {response.status_code}")
 
             if response.status_code == 200:
                 result = response.json()
+                logger.info(f"📦 [DashScope 测试] 响应内容: {result}")
                 if "choices" in result and len(result["choices"]) > 0:
                     content = result["choices"][0]["message"]["content"]
                     if content and len(content.strip()) > 0:
@@ -3610,12 +3613,15 @@ class ConfigService:
                         "message": f"{display_name} API响应格式异常"
                     }
             else:
+                error_text = response.text[:200] if response.text else "无响应内容"
+                logger.error(f"❌ [DashScope 测试] HTTP错误: {response.status_code}, 内容: {error_text}")
                 return {
                     "success": False,
-                    "message": f"{display_name} API测试失败: HTTP {response.status_code}"
+                    "message": f"{display_name} API测试失败: HTTP {response.status_code} - {error_text}"
                 }
 
         except Exception as e:
+            logger.error(f"❌ [DashScope 测试] 异常: {str(e)}")
             return {
                 "success": False,
                 "message": f"{display_name} API测试异常: {str(e)}"
