@@ -974,13 +974,21 @@ class ConfigService:
                     "Authorization": f"Bearer {api_key}"
                 }
 
+                # 🔧 根据模型类型调整 temperature 参数
+                # Kimi/Moonshot AI 的模型只接受 temperature=1
+                provider_lower = provider_str.lower()
+                if provider_lower in ["moonshot", "kimi"]:
+                    test_temperature = 1.0
+                else:
+                    test_temperature = 0.1
+                
                 data = {
                     "model": llm_config.model_name,
                     "messages": [
                         {"role": "user", "content": "Hello, please respond with 'OK' if you can read this."}
                     ],
                     "max_tokens": 200,  # 增加到200，给推理模型（如o1/gpt-5）足够空间
-                    "temperature": 0.1
+                    "temperature": test_temperature
                 }
 
                 logger.info(f"🌐 发送测试请求到: {url}")
@@ -4265,8 +4273,10 @@ class ConfigService:
                 "Authorization": f"Bearer {api_key}"
             }
 
-            # 🔥 根据不同厂家选择合适的测试模型
+            # 🔥 根据不同厂家选择合适的测试模型和温度参数
             test_model = "gpt-3.5-turbo"  # 默认模型
+            test_temperature = 0.1  # 默认温度
+            
             if provider_name == "siliconflow":
                 # 硅基流动使用免费的 Qwen 模型进行测试
                 test_model = "Qwen/Qwen2.5-7B-Instruct"
@@ -4275,6 +4285,11 @@ class ConfigService:
                 # 智谱AI使用 glm-4 模型进行测试
                 test_model = "glm-4"
                 logger.info(f"🔍 智谱AI使用测试模型: {test_model}")
+            elif provider_name in ["moonshot", "kimi"]:
+                # Moonshot/Kimi 使用 moonshot-v1-8k 模型，且只接受 temperature=1
+                test_model = "moonshot-v1-8k"
+                test_temperature = 1.0
+                logger.info(f"🔍 Moonshot/Kimi 使用测试模型: {test_model}, temperature=1.0")
 
             # 使用一个通用的模型名称进行测试
             # 聚合渠道通常支持多种模型，这里使用 gpt-3.5-turbo 作为测试
@@ -4284,7 +4299,7 @@ class ConfigService:
                     {"role": "user", "content": "Hello, please respond with 'OK' if you can read this."}
                 ],
                 "max_tokens": 200,  # 增加到200，给推理模型（如o1/gpt-5）足够空间
-                "temperature": 0.1
+                "temperature": test_temperature
             }
 
             response = requests.post(url, json=data, headers=headers, timeout=15)

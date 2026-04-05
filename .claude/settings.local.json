@@ -29,7 +29,27 @@
       "Bash(railway open:*)",
       "Bash(pip-compile --generate-hashes pyproject.toml -o requirements.txt)",
       "Bash(/Users/joshua/code/TradingAgents-CN/requirements.txt:*)",
-      "Bash(ls -la /Users/joshua/code/TradingAgents-CN/*.toml /Users/joshua/code/TradingAgents-CN/requirements.txt)"
+      "Bash(ls -la /Users/joshua/code/TradingAgents-CN/*.toml /Users/joshua/code/TradingAgents-CN/requirements.txt)",
+      "Bash(railway variable:*)",
+      "Bash(claude --list-plugins)",
+      "Skill(railway:use-railway)",
+      "Bash(railway run:*)",
+      "Bash(railway shell:*)",
+      "Bash(python3:*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(railway connect:*)",
+      "Bash(brew install:*)",
+      "Bash(docker run:*)",
+      "Bash(curl:*)",
+      "Bash(railway domain:*)",
+      "Bash(for url:*)",
+      "Bash(do)",
+      "Bash(echo \"Testing: $url\")",
+      "Bash(ls -la /Users/joshua/code/TradingAgents-CN/frontend/*.json /Users/joshua/code/TradingAgents-CN/frontend/*.toml)"
     ]
+  },
+  "enabledPlugins": {
+    "railway@claude-plugins-official": true
   }
 }
