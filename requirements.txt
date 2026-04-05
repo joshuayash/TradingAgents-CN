@@ -1,54 +1,53 @@
-# 核心依赖
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
-pydantic>=2.0.0
-pydantic-settings>=2.0.0
-python-multipart>=0.0.6
-
-# 数据库和缓存
-motor>=3.3.0
-pymongo>=4.0.0
-redis>=6.2.0
-
-# 认证
-PyJWT>=2.0.0
-bcrypt>=4.0.0
-
-# 任务调度
-apscheduler>=3.10.0
-aiofiles>=0.8.0
-
-# HTTP客户端
-httpx>=0.24.0
-sse-starlette>=1.0.0
-requests>=2.32.4
-
-# 数据源
-akshare>=1.17.86
-baostock>=0.8.8
-tushare>=1.4.21
-yfinance>=0.2.63
-stockstats>=0.6.5
-
-# AI和LLM
-langchain-openai>=0.3.23
-langgraph>=0.4.8
-openai>=1.0.0,<2.0.0
-dashscope>=1.20.0
-
-# 数据处理
-pandas>=2.3.0
-numpy<2.0.0
-
-# 爬虫
-curl-cffi>=0.6.0
-feedparser>=6.0.11
-parsel>=1.10.0
-praw>=7.8.1
-
-# 其他
-python-dotenv>=1.0.0
-pytz>=2025.2
-rich>=14.0.0
-tqdm>=4.67.1
 typing-extensions>=4.14.0
+openai>=1.0.0,<2.0.0
+langchain-openai>=0.3.23
+langchain-experimental>=0.3.4
+pandas>=2.3.0
+yfinance>=0.2.63
+praw>=7.8.1
+feedparser>=6.0.11
+stockstats>=0.6.5
+eodhd>=1.0.32
+langgraph>=0.4.8
+chromadb>=1.0.12
+setuptools>=80.9.0
+akshare>=1.17.86
+tushare>=1.4.21
+baostock>=0.8.8
+finnhub-python>=2.4.23
+parsel>=1.10.0
+requests>=2.32.4
+curl-cffi>=0.6.0  # 模拟真实浏览器TLS指纹，绕过反爬虫检测
+tqdm>=4.67.1
+pytz>=2025.2
+redis>=6.2.0
+chainlit>=2.5.5
+rich>=14.0.0
+questionary>=2.1.0
+langchain-anthropic>=0.3.15
+langchain-google-genai>=2.1.12  # 修复 client_options 未定义错误
+google-genai>=0.1.0
+dashscope>=1.20.0
+streamlit>=1.28.0
+plotly>=5.0.0
+psutil>=6.1.0
+pymongo>=4.0.0  # MongoDB数据库支持，用于Token使用记录存储
+motor>=3.3.0  # 异步MongoDB驱动，用于FastAPI后端
+markdown>=3.4.0  # Markdown处理，用于报告生成
+pypandoc>=1.11  # 文档格式转换，用于导出报告功能
+python-docx>=0.8.11  # Word文档处理，用于修复文本方向
+pdfkit>=1.0.0  # PDF生成工具，需要wkhtmltopdf
+python-dotenv>=1.0.0  # 环境变量管理，用于.env文件解析
+toml>=0.10.2  # TOML配置文件解析
+fastapi>=0.104.0  # FastAPI框架，用于后端API
+uvicorn[standard]>=0.24.0  # ASGI服务器，用于运行FastAPI
+pydantic>=2.0.0  # 数据验证，FastAPI依赖
+pydantic-settings>=2.0.0  # 设置管理，用于配置加载
+python-multipart>=0.0.6  # 文件上传支持
+PyJWT>=2.0.0  # JWT令牌处理
+bcrypt>=4.0.0  # 密码加密
+apscheduler>=3.10.0  # 任务调度器，用于定时任务
+aiofiles>=0.8.0  # 异步文件操作
+httpx>=0.24.0  # 异步HTTP客户端
+sse-starlette>=1.0.0  # Server-Sent Events支持
+concurrent-log-handler>=0.9.24  # Windows 友好的日志轮转处理器
