@@ -68,8 +68,8 @@ class CreateUserRequest(BaseModel):
 
 async def get_current_user(authorization: Optional[str] = Header(default=None)) -> dict:
     """获取当前用户信息"""
-    logger.debug(f"🔐 认证检查开始")
-    logger.debug(f"📋 Authorization header: {authorization[:50] if authorization else 'None'}...")
+    logger.info(f"🔐 认证检查开始")
+    logger.info(f"📋 Authorization header: {authorization[:100] if authorization else 'None'}...")
 
     if not authorization:
         logger.warning("❌ 没有Authorization header")

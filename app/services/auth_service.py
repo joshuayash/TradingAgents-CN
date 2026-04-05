@@ -29,8 +29,10 @@ class AuthService:
         logger = logging.getLogger(__name__)
 
         try:
-            logger.debug(f"🔍 开始验证token")
-            logger.debug(f"📝 Token长度: {len(token)}")
+            logger.info(f"🔍 开始验证token")
+            logger.info(f"📝 Token: {token[:50]}...")
+            logger.info(f"📝 Token长度: {len(token)}")
+            logger.info(f"📝 Token段数: {len(token.split('.'))}")
             logger.debug(f"🔑 JWT密钥: {settings.JWT_SECRET[:10]}...")
             logger.debug(f"🔧 JWT算法: {settings.JWT_ALGORITHM}")
 
