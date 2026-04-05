@@ -106,7 +106,7 @@ class AKShareSyncService:
                 # 进度日志
                 progress = min(i + self.batch_size, len(stock_list))
                 logger.info(f"📈 基础信息同步进度: {progress}/{len(stock_list)} "
-                           f"(成功: {stats['success_count']}, 错误: {stats['error_count']})")
+                           f"(成功: {stats['success_count']}, 跳过: {stats['skipped_count']}, 错误: {stats['error_count']})")
                 
                 # API限流
                 if i + self.batch_size < len(stock_list):
@@ -119,8 +119,8 @@ class AKShareSyncService:
             logger.info(f"🎉 股票基础信息同步完成！")
             logger.info(f"📊 总计: {stats['total_processed']}只, "
                        f"成功: {stats['success_count']}, "
-                       f"错误: {stats['error_count']}, "
                        f"跳过: {stats['skipped_count']}, "
+                       f"错误: {stats['error_count']}, "
                        f"耗时: {stats['duration']:.2f}秒")
             
             return stats
@@ -138,20 +138,23 @@ class AKShareSyncService:
             "skipped_count": 0,
             "errors": []
         }
-        
+
         for stock_info in batch:
             try:
                 code = stock_info["code"]
-                
+
                 # 检查是否需要更新
                 if not force_update:
                     existing = await self.db.stock_basic_info.find_one({"code": code})
                     if existing and self._is_data_fresh(existing.get("updated_at"), hours=24):
                         batch_stats["skipped_count"] += 1
+                        logger.debug(f"⏭️ {code} 数据新鲜，跳过更新")
                         continue
-                
+
                 # 获取详细基础信息
+                logger.debug(f"🔍 正在获取 {code} 基础信息...")
                 basic_info = await self.provider.get_stock_basic_info(code)
+                logger.debug(f"📊 {code} 获取结果: {basic_info is not None}")
                 
                 if basic_info:
                     # 转换为字典格式
