@@ -1,43 +1,44 @@
-typing-extensions
+typing-extensions>=4.14.0
 openai>=1.0.0,<2.0.0
-langchain-openai>=0.1.0
-langchain-experimental
-pandas
-yfinance
-praw
-feedparser
-stockstats
-eodhd
-langgraph
-chromadb
-setuptools
+langchain-openai>=0.3.23
+langchain-experimental>=0.3.4
+pandas>=2.3.0
+yfinance>=0.2.63
+praw>=7.8.1
+feedparser>=6.0.11
+stockstats>=0.6.5
+eodhd>=1.0.32
+langgraph>=0.4.8
+chromadb>=1.0.12
+setuptools>=80.9.0
 akshare>=1.17.86
-tushare
-baostock
-finnhub-python
-parsel
-requests
+tushare>=1.4.21
+baostock>=0.8.8
+finnhub-python>=2.4.23
+parsel>=1.10.0
+requests>=2.32.4
 curl-cffi>=0.6.0  # 模拟真实浏览器TLS指纹，绕过反爬虫检测
-tqdm
-pytz
-redis
-chainlit
-rich
-questionary
-langchain_anthropic
+tqdm>=4.67.1
+pytz>=2025.2
+redis>=6.2.0
+chainlit>=2.5.5
+rich>=14.0.0
+questionary>=2.1.0
+langchain-anthropic>=0.3.15
 langchain-google-genai>=2.1.12  # 修复 client_options 未定义错误
 google-genai>=0.1.0
-dashscope
-streamlit
-plotly
-psutil
-pymongo  # MongoDB数据库支持，用于Token使用记录存储
+dashscope>=1.20.0
+streamlit>=1.28.0
+plotly>=5.0.0
+psutil>=6.1.0
+pymongo>=4.0.0  # MongoDB数据库支持，用于Token使用记录存储
 motor>=3.3.0  # 异步MongoDB驱动，用于FastAPI后端
 markdown>=3.4.0  # Markdown处理，用于报告生成
 pypandoc>=1.11  # 文档格式转换，用于导出报告功能
 python-docx>=0.8.11  # Word文档处理，用于修复文本方向
 pdfkit>=1.0.0  # PDF生成工具，需要wkhtmltopdf
 python-dotenv>=1.0.0  # 环境变量管理，用于.env文件解析
+toml>=0.10.2  # TOML配置文件解析
 fastapi>=0.104.0  # FastAPI框架，用于后端API
 uvicorn[standard]>=0.24.0  # ASGI服务器，用于运行FastAPI
 pydantic>=2.0.0  # 数据验证，FastAPI依赖
